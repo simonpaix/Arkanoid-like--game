@@ -107,7 +107,7 @@ def setup():
     #TEXT instructions:
     TEXT1= canvas.create_text(WIDTH_CANVAS/2 , HEIGHT_CANVAS/2 +2*BALL_RADIUS+ 20,
                                        font=('Times New Roman', 36),
-                                       text = 'Clique para começar',)
+                                       text = 'Click to start',)
 
     #remaining BRICKS:
     TEXT2 = canvas.create_text( ESPACE_BETWEEN_BRICKS,
