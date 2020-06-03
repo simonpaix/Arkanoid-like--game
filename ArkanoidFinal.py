@@ -4,96 +4,115 @@
 # -*- coding: cp1252 -*-
 
 
-from winsound import PlaySound, SND_FILENAME, SND_ASYNC
-from Tkinter import *
+
+import pygame, sys
+from pygame import mixer
+from tkinter import *
 import random
 import time
 
-# canvas dimensions
-WIDTH_CANVAS = 400
-HEIGHT_CANVAS = 600
+#pygame.init()
 
-# RACKET dimensions
-WIDTH_RACKET = 60
-HEIGHT_RACKET = 10
+# ------------------Sound Music Mixer Code --------------------------
+#pygame.mixer.init(44100, -16,2,2048)# setup mixer to avoid sound lag
 
-#  RACKET distance
-DISTANCE_Y_RACKET = 30
-
-# BRICKs per row
-BRICKS_PER_ROW = 10
-
-# rows
-ROWS_OF_BRICKS = 10
-
-# espace
-ESPACE_BETWEEN_BRICKS = 4
-
-# WIDTH  BRICK
-WIDTH_BRICK = (WIDTH_CANVAS - (BRICKS_PER_ROW - 1) *
-ESPACE_BETWEEN_BRICKS) / BRICKS_PER_ROW
-
-# HEIGHT  BRICK
-HEIGHT_BRICK = 8
-
-#  ball radius in pixels
-BALL_RADIUS = 10
-
-# DISTANCE from top
-DISTANCE_Y_BRICK = 70
-
-# tries
-LIFES = 3
-
-#delay
-DELAY = 0.01
-
-#total bricks in canvas
-BRICKS= BRICKS_PER_ROW* ROWS_OF_BRICKS   
-
-# x0 is coordinate x of first row, remains constant
-x0= (WIDTH_CANVAS - WIDTH_BRICK * BRICKS_PER_ROW -
-(BRICKS_PER_ROW-1)*ESPACE_BETWEEN_BRICKS)/2.0
-
-#x is initialized with x0, but increases to create new bricks
-x = x0
-y = DISTANCE_Y_BRICK
-
-#counter that determines row  colour, from list
-n = 0 
-
-#speed components, BALL:
-vy = 3
-
-vx = random.uniform(1.0, 3.0)
-if random.choice([True, False])==True:
-    vx = -vx
-#BALL acceleration when it touches a  BRICK:
-ACCELERATION=1.02
 
 #sounds:
+def soundSetup():
+  try:
+      pygame.mixer.music.load('media/airplane-landing.wav')#load music
+      touchBRICK= pygame.mixer.Sound('media/crash.wav')
+      touchRACKET=pygame.mixer.Sound('media/slap.wav')
+      BALLout= pygame.mixer.Sound('media/fire.wav')
+      lostGame= pygame.mixer.Sound('media/scream.wav')
+      wonGame=  pygame.mixer.Sound('media/thunder.wav')
 
-touchBRICK= 'C:\Windows\Media\Savanna\Windows Default.wav'
-touchRACKET='C:\Windows\Media\Windows User Account Control.wav' 
-BALLout= "C:\Windows\Media\Speech Sleep.wav"
-lostGame= "C:\Windows\Media\Raga\Windows Critical Stop.wav"
-wonGame= "C:\Windows\Media\tada.wav"
+  except:
+    errorHandle()
+     
+
+def errorHandle():
+   print ("error: sound not available ")
+   pass
 
 
-def setup():
-    global x,y,n,x1,y1,RACKET,BALL,TEXT1,TEXT2,TEXT3
+def gameSetup():
+    global x,y,colourCount,x1,y1,RACKET,BALL,TEXT1,TEXT2,TEXT3,WIDTH_CANVAS,HEIGHT_CANVAS,WIDTH_RACKET,HEIGHT_RACKET,DISTANCE_Y_RACKET,BRICKS_PER_ROW,ROWS_OF_BRICKS,ESPACE_BETWEEN_BRICKS,WIDTH_BRICK,HEIGHT_BRICK,BALL_RADIUS,DISTANCE_Y_BRICK,LIFES,DELAY,BRICKS,x0,x,y,vy,vx,ACCELERATION
+     
+
+    # RACKET dimensions
+    WIDTH_RACKET = 60
+    HEIGHT_RACKET = 10
+
+    #  RACKET distance
+    DISTANCE_Y_RACKET = 30
+
+    # BRICKs per row
+    BRICKS_PER_ROW = 10
+
+    # rows
+    ROWS_OF_BRICKS = 10
+
+    # espace
+    ESPACE_BETWEEN_BRICKS = 4
+
+    # WIDTH  BRICK
+    WIDTH_BRICK = (WIDTH_CANVAS - (BRICKS_PER_ROW - 1) *
+    ESPACE_BETWEEN_BRICKS) / BRICKS_PER_ROW
+
+    # HEIGHT  BRICK
+    HEIGHT_BRICK = 8
+
+    #  ball radius in pixels
+    BALL_RADIUS = 10
+
+    # DISTANCE from top
+    DISTANCE_Y_BRICK = 70
+
+    # tries
+    LIFES = 3
+
+    #delay
+    DELAY = 0.01
+
+    #total bricks in canvas
+    BRICKS= BRICKS_PER_ROW* ROWS_OF_BRICKS   
+
+    # x0 is coordinate x of first row, remains constant
+    x0= (WIDTH_CANVAS - WIDTH_BRICK * BRICKS_PER_ROW -
+    (BRICKS_PER_ROW-1)*ESPACE_BETWEEN_BRICKS)/2.0
+
+    #x is initialized with x0, but increases to create new bricks
+    x = x0
+    y = DISTANCE_Y_BRICK
+
+
+
+    #speed components, BALL:
+    vy = 3
+
+    vx = random.uniform(1.0, 3.0)
+    if random.choice([True, False])==True:
+        vx = -vx
+    #BALL acceleration when it touches a  BRICK:
+    ACCELERATION=1.02
+
+    colourCount=0
+    
+    #cleans canvas for a new game
+    canvas.delete('all')
 
     #build BRICKs rows:
     for i in range (ROWS_OF_BRICKS):
         for j in range(BRICKS_PER_ROW) :
             colours=['red','orange','yellow','green','cyan']
-            colour= colours[n]
+            colour= colours[colourCount]
             canvas.create_rectangle( x,y, x + WIDTH_BRICK,y+HEIGHT_BRICK,fill=colour)
             x= x + ESPACE_BETWEEN_BRICKS + WIDTH_BRICK
         x=x0
         y= y+ ESPACE_BETWEEN_BRICKS + HEIGHT_BRICK
         if i%2!=0:    #a colour muda nas linhas ímpares,
-            n+=1      # ou seja, ela muda a cada 2 linhas
+            colourCount+=1      # ou seja, ela muda a cada 2 linhas
 
     #Create RACKET:
     x1= (WIDTH_CANVAS-WIDTH_RACKET)/2
@@ -106,7 +125,7 @@ def setup():
 
     #TEXT instructions:
     TEXT1= canvas.create_text(WIDTH_CANVAS/2 , HEIGHT_CANVAS/2 +2*BALL_RADIUS+ 20,
-                                       font=('Times New Roman', 36),
+                                       font=('Times New Roman', 26),
                                        text = 'Click to start',)
 
     #remaining BRICKS:
@@ -132,7 +151,7 @@ def StartedRound():
         if getY(BALL)>=HEIGHT_CANVAS:
             LIFES-=1
             canvas.itemconfig(TEXT3, text = 'LIFES: ' + str(LIFES))
-            playsSound(BALLout)
+            #BALLout.play()
             if LIFES!=0:
                 canvas.delete(BALL)
                 BALL= canvas.create_oval(WIDTH_CANVAS/2 - BALL_RADIUS,HEIGHT_CANVAS/2-BALL_RADIUS,
@@ -187,6 +206,10 @@ def clickedMouse(e):
     canvas.delete(TEXT1)
     if not gameOver() and not gameWon():
         StartedRound()
+
+    else:
+      gameSetup()
+
       
     
 def verifiesObjCollision():
@@ -196,13 +219,13 @@ def verifiesObjCollision():
         vy=-vy *ACCELERATION
         if objCollision != RACKET:
             canvas.delete(objCollision)
-            playsSound(touchBRICK)
+            #touchBRICK.play()
             BRICKS-=1
             canvas.itemconfig(TEXT2, text = 'BRICKS: %3d ' % (BRICKS))
         else:
             dif = getY(BALL)- (HEIGHT_CANVAS- DISTANCE_Y_RACKET - HEIGHT_RACKET) 
             canvas.move(BALL,0, -dif)               
-            playsSound(touchRACKET)
+            #touchRACKET.play()
     
         
 
@@ -220,17 +243,17 @@ def gameWon():
     if BRICKS==0:
         canvas.delete(BALL)    
         canvas.create_text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2,
-                                           font=('Comic Sans', 36),
+                                           font=('Comic Sans', 26),
                                            text = 'Congrats,',fill='pink')
 
         canvas.create_text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2+ 100,
-                                           font=('Comic Sans', 36),
+                                           font=('Comic Sans', 26),
                                            text = 'You are awesome!!',fill='pink')
 
         canvas.create_text(WIDTH_CANVAS/2,HEIGHT_CANVAS/2 +200,
-                                           text = 'getting more difficult..',
+                                           text = 'click to restart..',
                                            font=('Comic Sans', 14))
-        playsSound(wonGame)
+        #wonGame.play()
         return True
 
 def gameOver():
@@ -239,19 +262,35 @@ def gameOver():
         canvas.create_text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2,
                                        font=('Courrier', 36),
                                        text = 'GAME OVER')
-        playsSound(lostGame)
+        #lostGame.play()
         return True
 
-def playsSound(file):
-    PlaySound(file, SND_FILENAME|SND_ASYNC)
-    
-canvas = Canvas(width=WIDTH_CANVAS, height=HEIGHT_CANVAS,
-background='white')
-canvas.pack(fill=BOTH,expand=YES)
+#def playsSound(file):
+ #   PlaySound(file, SND_FILENAME|SND_ASYNC)
 
-setup()
 
-canvas.bind("<Motion>", movedMouse)
-canvas.bind("<ButtonPress>", clickedMouse)
+def canvasSetup():
+  global canvas, WIDTH_CANVAS, HEIGHT_CANVAS
+  # canvas dimensions
+  WIDTH_CANVAS = 400
+  HEIGHT_CANVAS = 600
+
+
+
+  canvas = Canvas(width=WIDTH_CANVAS, height=HEIGHT_CANVAS,
+  background='white')
+  canvas.pack(fill=BOTH,expand=YES)
+  canvas.bind("<Motion>", movedMouse)
+  canvas.bind("<ButtonPress>", clickedMouse)
+
+
+def main():
+
+  canvasSetup()
+  soundSetup()
+  gameSetup()
+
+
+main()
 
 mainloop()
