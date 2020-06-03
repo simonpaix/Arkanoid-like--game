@@ -1,5 +1,5 @@
-#Nome : Mariana Simon Paixão
-#Ano: 2011
+#dev: Mariana Simon PaixÃ£o
+#year: 2011
 
 # -*- coding: cp1252 -*-
 
@@ -9,134 +9,134 @@ from Tkinter import *
 import random
 import time
 
-# dimensoes do canvas
-LARGURA_CANVAS = 400
-ALTURA_CANVAS = 600
+# canvas dimensions
+WIDTH_CANVAS = 400
+HEIGHT_CANVAS = 600
 
-# dimensoes da raquete
-LARGURA_RAQUETE = 60
-ALTURA_RAQUETE = 10
+# RACKET dimensions
+WIDTH_RACKET = 60
+HEIGHT_RACKET = 10
 
-# distancia da raquete ao chao
-DISTANCIA_Y_RAQUETE = 30
+#  RACKET distance
+DISTANCE_Y_RACKET = 30
 
-# numero de tijolos por linha
-TIJOLOS_POR_LINHA = 10
+# BRICKs per row
+BRICKS_PER_ROW = 10
 
-# número de linhas de tijolos
-LINHAS_DE_TIJOLOS = 10
+# rows
+ROWS_OF_BRICKS = 10
 
-# separação entre tijolos
-SEPARACAO_ENTRE_TIJOLOS = 4
+# espace
+ESPACE_BETWEEN_BRICKS = 4
 
-# largura de um tijolo
-LARGURA_TIJOLO = (LARGURA_CANVAS - (TIJOLOS_POR_LINHA - 1) *
-SEPARACAO_ENTRE_TIJOLOS) / TIJOLOS_POR_LINHA
+# WIDTH  BRICK
+WIDTH_BRICK = (WIDTH_CANVAS - (BRICKS_PER_ROW - 1) *
+ESPACE_BETWEEN_BRICKS) / BRICKS_PER_ROW
 
-# altura de um tijolo
-ALTURA_TIJOLO = 8
+# HEIGHT  BRICK
+HEIGHT_BRICK = 8
 
-# raio da bola em pixels
-RAIO_BOLA = 10
+#  ball radius in pixels
+BALL_RADIUS = 10
 
-# distancia da linha de tijolos superior ao topo
-DISTANCIA_Y_TIJOLO = 70
+# DISTANCE from top
+DISTANCE_Y_BRICK = 70
 
-# número de tentativas
-TENTATIVAS = 3
+# tries
+LIFES = 3
 
-#intervalo de animação
+#delay
 DELAY = 0.01
 
-#número de tijolos no canvas
-TIJOLOS= TIJOLOS_POR_LINHA* LINHAS_DE_TIJOLOS   
+#total bricks in canvas
+BRICKS= BRICKS_PER_ROW* ROWS_OF_BRICKS   
 
-# xo é a coordenada x da coluna 1, permanece constante
-x0= (LARGURA_CANVAS - LARGURA_TIJOLO * TIJOLOS_POR_LINHA -
-(TIJOLOS_POR_LINHA-1)*SEPARACAO_ENTRE_TIJOLOS)/2.0
+# x0 is coordinate x of first row, remains constant
+x0= (WIDTH_CANVAS - WIDTH_BRICK * BRICKS_PER_ROW -
+(BRICKS_PER_ROW-1)*ESPACE_BETWEEN_BRICKS)/2.0
 
-#x começa com o valor de x0 mas é incrementado para dar origem a novos tijolos
+#x is initialized with x0, but increases to create new bricks
 x = x0
-y = DISTANCIA_Y_TIJOLO
+y = DISTANCE_Y_BRICK
 
-#contador que determina a cor da linha de retangulos, a partir da lista
+#counter that determines row  colour, from list
 n = 0 
 
-#componentes da velocidade da bola:
+#speed components, BALL:
 vy = 3
 
 vx = random.uniform(1.0, 3.0)
 if random.choice([True, False])==True:
     vx = -vx
-#aceleração da bola ao tocar nos tijolos:
-ACELERACAO=1.02
+#BALL acceleration when it touches a  BRICK:
+ACCELERATION=1.02
 
-#sons do jogo:
+#sounds:
 
-tocouTIJOLO= 'C:\Windows\Media\Savanna\Windows Default.wav'
-tocouRAQUETE='C:\Windows\Media\Windows User Account Control.wav' 
-BOLAfora= "C:\Windows\Media\Speech Sleep.wav"
-perdeuJogo= "C:\Windows\Media\Raga\Windows Critical Stop.wav"
-ganhouJogo= "C:\Windows\Media\tada.wav"
+touchBRICK= 'C:\Windows\Media\Savanna\Windows Default.wav'
+touchRACKET='C:\Windows\Media\Windows User Account Control.wav' 
+BALLout= "C:\Windows\Media\Speech Sleep.wav"
+lostGame= "C:\Windows\Media\Raga\Windows Critical Stop.wav"
+wonGame= "C:\Windows\Media\tada.wav"
 
 
 def setup():
-    global x,y,n,x1,y1,RAQUETE,BOLA,TEXTO1,TEXTO2,TEXTO3
+    global x,y,n,x1,y1,RACKET,BALL,TEXT1,TEXT2,TEXT3
 
-    #Construir as linhas de tijolos:
-    for i in range (LINHAS_DE_TIJOLOS):
-        for j in range(TIJOLOS_POR_LINHA) :
-            cores=['red','orange','yellow','green','cyan']
-            cor= cores[n]
-            canvas.create_rectangle( x,y, x + LARGURA_TIJOLO,y+ALTURA_TIJOLO,fill=cor)
-            x= x + SEPARACAO_ENTRE_TIJOLOS + LARGURA_TIJOLO
+    #build BRICKs rows:
+    for i in range (ROWS_OF_BRICKS):
+        for j in range(BRICKS_PER_ROW) :
+            colours=['red','orange','yellow','green','cyan']
+            colour= colours[n]
+            canvas.create_rectangle( x,y, x + WIDTH_BRICK,y+HEIGHT_BRICK,fill=colour)
+            x= x + ESPACE_BETWEEN_BRICKS + WIDTH_BRICK
         x=x0
-        y= y+ SEPARACAO_ENTRE_TIJOLOS + ALTURA_TIJOLO
-        if i%2!=0:    #a cor muda nas linhas ímpares,
+        y= y+ ESPACE_BETWEEN_BRICKS + HEIGHT_BRICK
+        if i%2!=0:    #a colour muda nas linhas Ã­mpares,
             n+=1      # ou seja, ela muda a cada 2 linhas
 
-    #Criar a raquete:
-    x1= (LARGURA_CANVAS-LARGURA_RAQUETE)/2
-    y1= ALTURA_CANVAS - DISTANCIA_Y_RAQUETE
-    RAQUETE = canvas.create_rectangle(x1,y1,x1+LARGURA_RAQUETE,y1-ALTURA_RAQUETE,fill='black')
+    #Create RACKET:
+    x1= (WIDTH_CANVAS-WIDTH_RACKET)/2
+    y1= HEIGHT_CANVAS - DISTANCE_Y_RACKET
+    RACKET = canvas.create_rectangle(x1,y1,x1+WIDTH_RACKET,y1-HEIGHT_RACKET,fill='black')
 
-    #Criar a bola:
-    BOLA= canvas.create_oval(LARGURA_CANVAS/2 - RAIO_BOLA,ALTURA_CANVAS/2-RAIO_BOLA,
-                       LARGURA_CANVAS/2+RAIO_BOLA, ALTURA_CANVAS/2+RAIO_BOLA, fill='black')
+    #Create BALL:
+    BALL= canvas.create_oval(WIDTH_CANVAS/2 - BALL_RADIUS,HEIGHT_CANVAS/2-BALL_RADIUS,
+                       WIDTH_CANVAS/2+BALL_RADIUS, HEIGHT_CANVAS/2+BALL_RADIUS, fill='black')
 
-    #Texto que instrui o jogador a iniciar o jogo:
-    TEXTO1= canvas.create_text(LARGURA_CANVAS/2 , ALTURA_CANVAS/2 +2*RAIO_BOLA+ 20,
+    #TEXT instructions:
+    TEXT1= canvas.create_text(WIDTH_CANVAS/2 , HEIGHT_CANVAS/2 +2*BALL_RADIUS+ 20,
                                        font=('Times New Roman', 36),
-                                       text = 'Clique para começar',)
+                                       text = 'Clique para comeÃ§ar',)
 
-    #mostra ao jogador a quantidade restante de tijolos:
-    TEXTO2 = canvas.create_text( SEPARACAO_ENTRE_TIJOLOS,
-                             ALTURA_CANVAS-SEPARACAO_ENTRE_TIJOLOS,
-                             text = 'TIJOLOS: %3d ' % (TIJOLOS),
+    #remaining BRICKS:
+    TEXT2 = canvas.create_text( ESPACE_BETWEEN_BRICKS,
+                             HEIGHT_CANVAS-ESPACE_BETWEEN_BRICKS,
+                             text = 'BRICKS: %3d ' % (BRICKS),
                              anchor=SW, font=('Times New Roman', 14),fill='maroon')
 
-    #mostra ao jogador a quantidade restante de tentativas:
-    TEXTO3= canvas.create_text( LARGURA_CANVAS-SEPARACAO_ENTRE_TIJOLOS, ALTURA_CANVAS- SEPARACAO_ENTRE_TIJOLOS,
-                                text=  'TENTATIVAS: ' + str(TENTATIVAS), anchor=SE, font=('Times New Roman', 14),fill='blue')
+    #remaining LIFEs:
+    TEXT3= canvas.create_text( WIDTH_CANVAS-ESPACE_BETWEEN_BRICKS, HEIGHT_CANVAS- ESPACE_BETWEEN_BRICKS,
+                                text=  'LIFES: ' + str(LIFES), anchor=SE, font=('Times New Roman', 14),fill='blue')
     
 
     
     
 
 
-def IniciouRodada():
-    global BOLA, TENTATIVAS,vy,vx,TIJOLOS
-    while TIJOLOS!=0:
-        moveBOLA()
-        verificaObjColidido()
-        if getY(BOLA)>=ALTURA_CANVAS:
-            TENTATIVAS-=1
-            canvas.itemconfig(TEXTO3, text = 'TENTATIVAS: ' + str(TENTATIVAS))
-            tocaSom(BOLAfora)
-            if TENTATIVAS!=0:
-                canvas.delete(BOLA)
-                BOLA= canvas.create_oval(LARGURA_CANVAS/2 - RAIO_BOLA,ALTURA_CANVAS/2-RAIO_BOLA,
-                           LARGURA_CANVAS/2+RAIO_BOLA, ALTURA_CANVAS/2+RAIO_BOLA, fill='black')
+def StartedRound():
+    global BALL, LIFES,vy,vx,BRICKS
+    while BRICKS!=0:
+        moveBALL()
+        verifiesObjCollision()
+        if getY(BALL)>=HEIGHT_CANVAS:
+            LIFES-=1
+            canvas.itemconfig(TEXT3, text = 'LIFES: ' + str(LIFES))
+            playsSound(BALLout)
+            if LIFES!=0:
+                canvas.delete(BALL)
+                BALL= canvas.create_oval(WIDTH_CANVAS/2 - BALL_RADIUS,HEIGHT_CANVAS/2-BALL_RADIUS,
+                           WIDTH_CANVAS/2+BALL_RADIUS, HEIGHT_CANVAS/2+BALL_RADIUS, fill='black')
                 vy=3
                 vx=random.uniform(1.0, 3.0)
                 if random.choice([True, False])==True:
@@ -145,113 +145,113 @@ def IniciouRodada():
             else:
                 gameOver()
                 break
-    if TIJOLOS==0:
+    if BRICKS==0:
         gameWon()
         
 
-def moveBOLA():
+def moveBALL():
     global vx,vy
-    canvas.move(BOLA, vx,vy)
+    canvas.move(BALL, vx,vy)
     canvas.update() 
     time.sleep(DELAY)
-    if getY(BOLA)<=2*RAIO_BOLA:
+    if getY(BALL)<=2*BALL_RADIUS:
         vy=-vy
-    elif getX(BOLA) <= 2*RAIO_BOLA or getX(BOLA)>=LARGURA_CANVAS:
+    elif getX(BALL) <= 2*BALL_RADIUS or getX(BALL)>=WIDTH_CANVAS:
         vx=-vx
         
  
     
 
 
-def getX(objeto):
-    [x0, y0, x1, y1] = canvas.coords(objeto)
+def getX(object):
+    [x0, y0, x1, y1] = canvas.coords(object)
     return x1
 
-def getY(objeto):
-    [x0, y0, x1, y1] = canvas.coords(objeto)
+def getY(object):
+    [x0, y0, x1, y1] = canvas.coords(object)
     return y1
         
-def moveuMouse(e):
+def movedMouse(e):
     global x1
-    canvas.move(RAQUETE, e.x-LARGURA_RAQUETE/2 - x1 ,0 ) #move a raquete na horizontal
-    x1=e.x-LARGURA_RAQUETE/2    
-    if getX(RAQUETE)>=LARGURA_CANVAS:
-        canvas.move(RAQUETE,LARGURA_CANVAS - getX(RAQUETE),0)
-        x1=LARGURA_CANVAS-LARGURA_RAQUETE #garante que a raquete não saia pela lateral direita do canvas    
-    elif getX(RAQUETE) <=LARGURA_RAQUETE: #garante que a raquete não saia pela lateral esquerda do canvas  
-        canvas.move(RAQUETE, LARGURA_RAQUETE - getX(RAQUETE),0)
+    canvas.move(RACKET, e.x-WIDTH_RACKET/2 - x1 ,0 ) #moves RACKET horizontally
+    x1=e.x-WIDTH_RACKET/2    
+    if getX(RACKET)>=WIDTH_CANVAS:
+        canvas.move(RACKET,WIDTH_CANVAS - getX(RACKET),0)
+        x1=WIDTH_CANVAS-WIDTH_RACKET #RACKET never goes beyond canvas width  on the right
+    elif getX(RACKET) <=WIDTH_RACKET: #RACKET nnever goes   beyond canvas width on the left 
+        canvas.move(RACKET, WIDTH_RACKET - getX(RACKET),0)
         x1=0
 
-def clicouMouse(e): 
-    global TEXTO1
-    canvas.delete(TEXTO1)
+def clickedMouse(e): 
+    global TEXT1
+    canvas.delete(TEXT1)
     if not gameOver() and not gameWon():
-        IniciouRodada()
+        StartedRound()
       
     
-def verificaObjColidido():
-    global vy, TIJOLOS
-    objColidido = detectaColisoes()
-    if objColidido != None:
-        vy=-vy *ACELERACAO
-        if objColidido != RAQUETE:
-            canvas.delete(objColidido)
-            tocaSom(tocouTIJOLO)
-            TIJOLOS-=1
-            canvas.itemconfig(TEXTO2, text = 'TIJOLOS: %3d ' % (TIJOLOS))
+def verifiesObjCollision():
+    global vy, BRICKS
+    objCollision = detectsCollisions()
+    if objCollision != None:
+        vy=-vy *ACCELERATION
+        if objCollision != RACKET:
+            canvas.delete(objCollision)
+            playsSound(touchBRICK)
+            BRICKS-=1
+            canvas.itemconfig(TEXT2, text = 'BRICKS: %3d ' % (BRICKS))
         else:
-            dif = getY(BOLA)- (ALTURA_CANVAS- DISTANCIA_Y_RAQUETE - ALTURA_RAQUETE) 
-            canvas.move(BOLA,0, -dif)               
-            tocaSom(tocouRAQUETE)
+            dif = getY(BALL)- (HEIGHT_CANVAS- DISTANCE_Y_RACKET - HEIGHT_RACKET) 
+            canvas.move(BALL,0, -dif)               
+            playsSound(touchRACKET)
     
         
 
-def detectaColisoes():
-    global lista
-    [xb0, yb0, xb1, yb1] = canvas.coords(BOLA)
-    lista = canvas.find_overlapping(xb0, yb0, xb1, yb1)
-    if len(lista)>1:
-        if lista[0] != BOLA  and lista[0] != TEXTO2 and lista[0] !=TEXTO3:
-            return lista [0]
+def detectsCollisions():
+    global list
+    [xb0, yb0, xb1, yb1] = canvas.coords(BALL)
+    list = canvas.find_overlapping(xb0, yb0, xb1, yb1)
+    if len(list)>1:
+        if list[0] != BALL  and list[0] != TEXT2 and list[0] !=TEXT3:
+            return list [0]
     else:
         return None
 
 def gameWon():
-    if TIJOLOS==0:
-        canvas.delete(BOLA)    
-        canvas.create_text(LARGURA_CANVAS/2, ALTURA_CANVAS/2,
+    if BRICKS==0:
+        canvas.delete(BALL)    
+        canvas.create_text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2,
                                            font=('Comic Sans', 36),
-                                           text = 'Parabéns,',fill='pink')
+                                           text = 'Congrats,',fill='pink')
 
-        canvas.create_text(LARGURA_CANVAS/2, ALTURA_CANVAS/2+ 100,
+        canvas.create_text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2+ 100,
                                            font=('Comic Sans', 36),
-                                           text = 'Você é bom!!',fill='pink')
+                                           text = 'You are awesome!!',fill='pink')
 
-        canvas.create_text(LARGURA_CANVAS/2,ALTURA_CANVAS/2 +200,
-                                           text = 'em breve níveis mais difíceis..',
+        canvas.create_text(WIDTH_CANVAS/2,HEIGHT_CANVAS/2 +200,
+                                           text = 'getting more difficult..',
                                            font=('Comic Sans', 14))
-        tocaSom(ganhouJogo)
+        playsSound(wonGame)
         return True
 
 def gameOver():
-    if TENTATIVAS==0:
-        canvas.delete(BOLA)
-        canvas.create_text(LARGURA_CANVAS/2, ALTURA_CANVAS/2,
+    if LIFES==0:
+        canvas.delete(BALL)
+        canvas.create_text(WIDTH_CANVAS/2, HEIGHT_CANVAS/2,
                                        font=('Courrier', 36),
                                        text = 'GAME OVER')
-        tocaSom(perdeuJogo)
+        playsSound(lostGame)
         return True
 
-def tocaSom(file):
+def playsSound(file):
     PlaySound(file, SND_FILENAME|SND_ASYNC)
     
-canvas = Canvas(width=LARGURA_CANVAS, height=ALTURA_CANVAS,
+canvas = Canvas(width=WIDTH_CANVAS, height=HEIGHT_CANVAS,
 background='white')
 canvas.pack(fill=BOTH,expand=YES)
 
 setup()
 
-canvas.bind("<Motion>", moveuMouse)
-canvas.bind("<ButtonPress>", clicouMouse)
+canvas.bind("<Motion>", movedMouse)
+canvas.bind("<ButtonPress>", clickedMouse)
 
 mainloop()
